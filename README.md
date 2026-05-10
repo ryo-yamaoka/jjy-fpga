@@ -34,7 +34,7 @@ Tang Nano 9K（GOWIN GW1NR-9）で JJY 標準電波（40kHz）を模擬し、室
 | 1 | FPGA 基礎習得（Lチカ・スイッチ入力・デバウンス） | 完了 |
 | 2 | 40kHz 搬送波生成、JJY タイムコードのフレーム生成、OOK 変調 | 完了 |
 | 3 | 単純ループアンテナでの近距離同期確認 | 同期成功を確認済み |
-| 4 | PC 定期同期（UART 受信回路 + PC 側常駐スクリプト） | 着手前 |
+| 4 | PC 定期同期（UART 受信回路 + PC 側常駐スクリプト） | 短期動作確認済（電波時計が PC 時刻に同期）、長時間運用テスト未実施 |
 | 5 | DS3231 RTC モジュール接続による時刻精度向上 | 着手前 |
 | 6 | LC 共振回路・トランジスタバッファによるアンテナ改良（1〜2m 到達） | 着手前 |
 | 7 | 筐体化・常時運用化 | 将来目標 |
@@ -169,11 +169,15 @@ P&R 完了後、`gowin_project/jjy_sim/impl/pnr/jjy_sim.rpt.txt` の **Pinout by
 | ポート | ピン | Bank | IO_TYPE | 用途 |
 |-------|------|------|---------|------|
 | `clk` | 52 | 2（3.3V） | LVCMOS33 | 27MHz オンボードクロック |
+| `uart_rx` | **18** | 2（3.3V） | LVCMOS33 | **オンボード USB-UART (FT2232HQ Channel B / BL702) からの受信。Step 4 の PC 定期同期で使用** |
 | `carrier_led` | 10 | 3（1.8V） | LVCMOS18 | OOK 波形を LED1 に出力（目視確認用） |
 | `carrier_ant` | **25** | 1/2（3.3V） | LVCMOS33（DRIVE=24mA） | **ループアンテナ駆動用** |
-| `led_marker` / `led_one` / `led_zero` / `led_frame_sync` | 11 / 13 / 14 / 15 | 3（1.8V） | LVCMOS18 | パルス種別と毎分先頭の目視表示 |
+| `led_marker` | 11 | 3（1.8V） | LVCMOS18 | LED2: `time_valid` を 0.5 秒ストレッチ（時刻ロード成功表示） |
+| `led_one` | 13 | 3（1.8V） | LVCMOS18 | LED3: `uart_byte_valid` を 62 ms ストレッチ（UART バイト受信表示） |
+| `led_zero` | 14 | 3（1.8V） | LVCMOS18 | LED4: `time_setter.proc_busy` を 0.5 秒ストレッチ（パーサ進行中表示） |
+| `led_frame_sync` | 15 | 3（1.8V） | LVCMOS18 | LED5: フレーム先頭（毎分秒 0）で 1 秒点灯 |
 
-ループアンテナはピン **25** と **GND** の間に接続する。詳細な配線については [docs/knowledge.md §9.6](docs/knowledge.md) を参照。
+ループアンテナはピン **25** と **GND** の間に接続する。詳細な配線については [docs/knowledge.md §9.6](docs/knowledge.md) を参照。`uart_rx` (ピン 18) は Tang Nano 9K のオンボード USB Type-C コネクタ経由の USB-UART ブリッジに直結されており、追加配線は不要。
 
 ### 3.8 書き込み
 
@@ -192,26 +196,137 @@ P&R 完了後、`gowin_project/jjy_sim/impl/pnr/jjy_sim.rpt.txt` の **Pinout by
 
 同期しない場合のチェック手順は [docs/knowledge.md §9.8](docs/knowledge.md) を参照。
 
+### 3.10 PC 定期同期（Step 4 相当）
+
+Step 4 では、PC から FPGA に対して USB-UART 経由で時刻を定期送信し、FPGA 内部時刻を NTP 同期した PC の時刻に合わせ続ける。追加ハードウェアは不要で、書き込みに使っている USB Type-C ケーブルがそのままシリアル回線を兼ねる。
+
+#### 3.10.1 プロトコル
+
+21 バイト固定長 ASCII。
+
+```
+T2026-04-13T12:00:00\n
+```
+
+| 項目 | 値 |
+|------|------|
+| ボーレート | 115200 bps |
+| データビット | 8 |
+| パリティ | なし |
+| ストップビット | 1 |
+| フロー制御 | なし |
+| 受信時刻の意味 | 末尾 `\n` を受け終えた瞬間を「指定秒の頭」とみなす |
+| 妥当性検証失敗時 | 受信内容を破棄し、内部時刻は維持される |
+
+詳細仕様は [docs/jjy-fpga-design-doc.md §9.5](docs/jjy-fpga-design-doc.md) 参照。
+
+#### 3.10.2 PC 側スクリプトの依存解決
+
+```bash
+python3 -m pip install -r tools/requirements.txt
+```
+
+仮想環境を使う場合は `python3 -m venv .venv && source .venv/bin/activate` を先に実行する。
+
+#### 3.10.3 シリアルポートの確認（重要）
+
+ビットストリームを書き込み済みの状態でも、**送信先のシリアルポートが正しくないと FPGA UART には 1 バイトも届かない**。Tang Nano 9K のリビジョンにより以下の罠がある：
+
+- **旧版（FTDI FT2232HQ）**：2 つの `cu.usbserial-*` が現れる。**末尾番号が大きい方が UART (Channel B)**、小さい方は JTAG (Channel A)。Channel A に書き込んでも JTAG エンジンに吸われて FPGA UART には届かない
+- **新版（BL702/BL616）**：`cu.debug-console` という管理用チャネルが追加で見える。これは FPGA UART には繋がっていない
+
+`tools/jjy_sync.py` の自動検出はこれらを既に処理しているが、まず `--list` で確認しておく：
+
+```bash
+python3 tools/jjy_sync.py --list
+```
+
+出力例（旧版 FT2232HQ）：
+
+```
+device      : /dev/cu.usbserial-11400  (skipped: FTDI Channel A = JTAG)
+device      : /dev/cu.usbserial-11401  (preferred: FTDI Channel B = UART)
+```
+
+#### 3.10.4 単発送信による動作確認
+
+```bash
+python3 tools/jjy_sync.py --once -v
+```
+
+「次の `分:30` 秒」のタイミングで `T<送信時刻>\n` を送出する。**FPGA 側 LED で物理到達を必ず確認する**：
+
+| LED | ピン | 確認内容 |
+|-----|------|---------|
+| LED3 | 13 | UART 1 バイト受信のたびに点灯。21 バイト burst が見えるはず |
+| LED4 | 14 | `'T'` 受信後の処理中は点灯（約 0.5 秒） |
+| LED2 | 11 | フォーマット検証成功後の `time_valid` で点灯（約 0.5 秒） |
+
+**LED3 が点滅しなければシリアルポート選択を疑う**（前項参照）。LED3 は点滅するが LED2 が点かない場合はプロトコルや FPGA 側ロジックを疑う。詳細な切り分け手順は [docs/knowledge.md §10.5](docs/knowledge.md) 参照。
+
+LED2 が点灯したら、電波時計を強制受信モードにし、5〜10 分後に PC の時計と一致するかを確認する。
+
+#### 3.10.5 常駐スクリプトとして起動
+
+5 分ごとに送信する場合（既定値）。
+
+```bash
+python3 tools/jjy_sync.py
+```
+
+送信間隔は `--interval` で秒単位指定（例：`--interval 60` で毎分）。1 ポイント当たり 21 バイトのみで負荷は無視できる。送信は常に「`分:30` 秒」のアンカーに合わせるため、`--interval` を 60 未満にしても実効的には毎分 1 回の送信となる。
+
+#### 3.10.6 macOS で常駐化（launchd）
+
+テンプレート [tools/com.example.jjy-sync.plist](tools/com.example.jjy-sync.plist) を以下の手順で展開する。
+
+1. `tools/com.example.jjy-sync.plist` の `/ABSOLUTE/PATH/TO/jjy-fpga/` を実パスに置換し、必要なら `--interval` の値も調整する
+2. `~/Library/LaunchAgents/com.example.jjy-sync.plist` にコピー
+3. `launchctl load -w ~/Library/LaunchAgents/com.example.jjy-sync.plist`
+4. `tail -f /tmp/jjy_sync.log` でログを監視
+
+停止は `launchctl unload ~/Library/LaunchAgents/com.example.jjy-sync.plist`。
+
+#### 3.10.7 シミュレーションによるロジック検証（任意）
+
+実機投入前に UART 受信〜時刻反映ロジックを Icarus Verilog 等のシミュレータで確認できる。
+
+```bash
+brew install icarus-verilog
+iverilog -g2012 -o /tmp/tb_time_setter.vvp \
+    hdl/tb/tb_time_setter.sv \
+    hdl/src/uart_rx.sv \
+    hdl/src/time_setter.sv \
+    hdl/src/date_calc.sv
+vvp /tmp/tb_time_setter.vvp
+```
+
+`OK` の表示が出ればすべての検証ケースに通過している。
+
 ---
 
 ## 4. ディレクトリ構成
 
 ```
 jjy-fpga/
-├── README.md                    # 本ファイル
-├── LICENSE                      # MIT License
+├── README.md                       # 本ファイル
+├── LICENSE                         # MIT License
 ├── docs/
-│   ├── jjy-fpga-design-doc.md   # 設計ドキュメント（思想・意思決定）
-│   ├── knowledge.md             # 実装知見集（実装中の発見と教訓）
-│   └── manual/                  # GOWIN 公式マニュアル類の配置先（gitignore 対象、各自配置）
+│   ├── jjy-fpga-design-doc.md      # 設計ドキュメント（思想・意思決定）
+│   ├── knowledge.md                # 実装知見集（実装中の発見と教訓）
+│   └── manual/                     # GOWIN 公式マニュアル類の配置先（gitignore 対象、各自配置）
 ├── hdl/
-│   ├── src/                     # SystemVerilog ソース（正本）
-│   ├── constraints/             # ピン制約 (.cst) とタイミング制約 (.sdc)
-│   └── tb/                      # テストベンチ
+│   ├── src/                        # SystemVerilog ソース（正本）
+│   ├── constraints/                # ピン制約 (.cst) とタイミング制約 (.sdc)
+│   └── tb/                         # テストベンチ
+├── tools/
+│   ├── jjy_sync.py                 # PC 定期同期デーモン（Step 4）
+│   ├── requirements.txt            # pyserial 依存
+│   └── com.example.jjy-sync.plist  # macOS launchd テンプレート
 └── gowin_project/
     └── jjy_sim/
-        ├── jjy_sim.gprj         # GOWIN EDA プロジェクト（相対パス参照）
-        └── impl/                # 生成物（gitignore 対象）
+        ├── jjy_sim.gprj            # GOWIN EDA プロジェクト（相対パス参照）
+        └── impl/                   # 生成物（gitignore 対象）
 ```
 
 ---

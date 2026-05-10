@@ -8,6 +8,10 @@
         <File path="../../hdl/src/carrier_40khz.sv" type="file.verilog" enable="1"/>
         <File path="../../hdl/src/jjy_frame.sv" type="file.verilog" enable="1"/>
         <File path="../../hdl/src/jjy_modulator.sv" type="file.verilog" enable="1"/>
+        <File path="../../hdl/src/uart_rx.sv" type="file.verilog" enable="1"/>
+        <File path="../../hdl/src/time_setter.sv" type="file.verilog" enable="1"/>
+        <File path="../../hdl/src/date_calc.sv" type="file.verilog" enable="1"/>
+        <File path="../../hdl/src/bin9_to_bcd.sv" type="file.verilog" enable="1"/>
         <File path="../../hdl/src/jjy_top.sv" type="file.verilog" enable="1"/>
         <File path="../../hdl/constraints/jjy_top.cst" type="file.cst" enable="1"/>
         <File path="../../hdl/constraints/clock.sdc" type="file.sdc" enable="1"/>

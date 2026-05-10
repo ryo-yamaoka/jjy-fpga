@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  macOS launchd plist template for jjy_sync.py.
+
+  Setup:
+    1. Edit the absolute paths below to match your environment.
+    2. Copy to ~/Library/LaunchAgents/com.example.jjy-sync.plist
+    3. launchctl load -w ~/Library/LaunchAgents/com.example.jjy-sync.plist
+    4. tail -f /tmp/jjy_sync.log
+
+  Tail: launchctl unload ~/Library/LaunchAgents/com.example.jjy-sync.plist
+        rm ~/Library/LaunchAgents/com.example.jjy-sync.plist
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.example.jjy-sync</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/python3</string>
+        <string>/ABSOLUTE/PATH/TO/jjy-fpga/tools/jjy_sync.py</string>
+        <string>--interval</string>
+        <string>300</string>
+    </array>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>KeepAlive</key>
+    <true/>
+
+    <key>StandardOutPath</key>
+    <string>/tmp/jjy_sync.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/tmp/jjy_sync.err</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/usr/local/bin:/usr/bin:/bin</string>
+    </dict>
+</dict>
+</plist>
