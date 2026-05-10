@@ -81,7 +81,7 @@ module jjy_top #(
     end
 
     // Hardcoded calendar (2026-04-13 Mon, day 103, year 26).
-    // No rollover handling here because Phase 3 only needs short-term sync.
+    // No rollover handling here because Step 3 only needs short-term sync.
     localparam logic [1:0] DAY_HUND_C  = 2'd1;
     localparam logic [3:0] DAY_TENS_C  = 4'd0;
     localparam logic [3:0] DAY_ONES_C  = 4'd3;
