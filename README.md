@@ -382,3 +382,6 @@ JJY と同一の 40kHz 帯は、日本では NICT（情報通信研究機構）�
 [MIT License](LICENSE)
 
 Copyright (c) 2026 ryo-yamaoka
+
+<!-- PR作成テスト用の追記 -->
+
