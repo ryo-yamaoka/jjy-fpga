@@ -6,6 +6,8 @@ Tang Nano 9K（GOWIN GW1NR-9）で JJY 標準電波（40kHz）を模擬し、室
 
 詳細な設計思想・実装段階の意思決定は [docs/jjy-fpga-design-doc.md](docs/jjy-fpga-design-doc.md) に、実装中に得られた具体的な知見は [docs/knowledge.md](docs/knowledge.md) にまとめている。本 README は最低限の概要と再現手順、および電波法に関する**重要な免責事項**を記載する。
 
+![docs/schematic.svg](docs/schematic.svg)
+
 ---
 
 ## 1. プロジェクト概要
@@ -335,6 +337,7 @@ jjy-fpga/
 
 - [設計ドキュメント](docs/jjy-fpga-design-doc.md) — プロジェクトの動機、ボード/HDL 選定理由、Step 1〜7 の詳細計画、電波法に関する詳細な検討。
 - [実装知見集](docs/knowledge.md) — Tang Nano 9K のハードウェア仕様、GOWIN EDA の落とし穴、JJY タイムコード実装の教訓。
+- [回路図](docs/schematic.svg) — 現行実機構成（RX8900 RTC + 共振タンク・NPN 増幅段）の結線図。
 
 ---
 
