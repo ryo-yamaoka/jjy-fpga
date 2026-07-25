@@ -8,8 +8,8 @@ module jjy_top #(
     input  logic fout_1hz,      // RX8900 FOUT (1Hz, FOE=H fixed)
     inout  wire  sda,           // open-drain, external 10k pull-up
     inout  wire  scl,           // open-drain, external 10k pull-up
-    output logic carrier_led,
-    output logic carrier_ant,
+    output logic carrier_led,   // active-low (on-board LED1)
+    output logic carrier_ant,   // active-high, idles low (NPN tank driver)
     output logic led_marker,
     output logic led_one,
     output logic led_zero,
@@ -272,20 +272,23 @@ module jjy_top #(
         end
     end
 
-    // BCD time registers. Initial value: 2026-04-13 (DOY 103) Mon, 12:00.
+    // BCD time registers. Initial value: 2000-01-01 (DOY 1) Sat, 00:00:00.
+    // Deliberately implausible so that a failed time load (RTC VLF set and no
+    // PC sync yet) is obvious on any clock that picks up the broadcast; it
+    // pairs with LED6 as the "time not established" indicator.
     // Overwritten by the arbiter on every PC time-set or RTC read-out.
     // syn_preserve prevents the synthesizer from absorbing/optimising any of
     // these registers when the load path looks like a constant assignment.
     (* syn_preserve = "true" *) logic [3:0] min_ones  = 4'd0;
     (* syn_preserve = "true" *) logic [2:0] min_tens  = 3'd0;
-    (* syn_preserve = "true" *) logic [3:0] hour_ones = 4'd2;
-    (* syn_preserve = "true" *) logic [1:0] hour_tens = 2'd1;
-    (* syn_preserve = "true" *) logic [1:0] day_hund  = 2'd1;
+    (* syn_preserve = "true" *) logic [3:0] hour_ones = 4'd0;
+    (* syn_preserve = "true" *) logic [1:0] hour_tens = 2'd0;
+    (* syn_preserve = "true" *) logic [1:0] day_hund  = 2'd0;
     (* syn_preserve = "true" *) logic [3:0] day_tens  = 4'd0;
-    (* syn_preserve = "true" *) logic [3:0] day_ones  = 4'd3;
-    (* syn_preserve = "true" *) logic [3:0] year_tens = 4'd2;
-    (* syn_preserve = "true" *) logic [3:0] year_ones = 4'd6;
-    (* syn_preserve = "true" *) logic [2:0] weekday   = 3'd1;
+    (* syn_preserve = "true" *) logic [3:0] day_ones  = 4'd1;
+    (* syn_preserve = "true" *) logic [3:0] year_tens = 4'd0;
+    (* syn_preserve = "true" *) logic [3:0] year_ones = 4'd0;
+    (* syn_preserve = "true" *) logic [2:0] weekday   = 3'd6;
 
     logic minute_tick;
     assign minute_tick = sec_tick && (sec_in_frame == 6'd59);
@@ -344,10 +347,9 @@ module jjy_top #(
         .clk        (clk),
         .sec_pos    (sec_pos),
         .pulse_type (pulse_type),
-        .carrier    (carrier_led)
+        .carrier    (carrier_ant),
+        .carrier_n  (carrier_led)
     );
-
-    assign carrier_ant = carrier_led;
 
     // ----- status indicators -----
     // Each pulse-stretched signal lights its LED long enough to be visible.

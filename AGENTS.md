@@ -9,6 +9,5 @@
 
 ## Coding Instructions
 
-* Do not run `git commit` after writing code.
 * Do not write verbose comments; keep them to a minimum.
   * Only add comments to explain things that cannot be understood from the code itself.
