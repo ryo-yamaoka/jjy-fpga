@@ -37,8 +37,8 @@ Tang Nano 9K（GOWIN GW1NR-9）で JJY 標準電波（40kHz）を模擬し、室
 | 2 | 40kHz 搬送波生成、JJY タイムコードのフレーム生成、OOK 変調 | 完了 |
 | 3 | 単純ループアンテナでの近距離同期確認 | 同期成功を確認済み |
 | 4 | PC 定期同期（UART 受信回路 + PC 側常駐スクリプト） | 短期動作確認済（電波時計が PC 時刻に同期）、長時間運用テスト未実施 |
-| 5 | RX8900 RTC モジュール接続による時刻精度向上（I2C マスタ + 時刻ソース調停 + FOUT 1Hz 秒境界規律） | HDL 実装完了（シミュレーション検証済み、実機検証未実施） |
-| 6 | LC 共振回路・トランジスタバッファによるアンテナ改良（1〜2m 到達） | 着手前 |
+| 5 | RX8900 RTC モジュール接続による時刻精度向上（I2C マスタ + 時刻ソース調停 + FOUT 1Hz 秒境界規律） | 実機検証済み（電源断復帰・PC 無し起動で同期成功）。24 時間連続稼働の確認のみ残 |
+| 6 | LC 共振回路・トランジスタバッファによるアンテナ改良（1〜2m 到達） | 回路実装・動作確認済み。**到達距離の評価が未実施** |
 | 7 | 筐体化・常時運用化 | 将来目標 |
 
 ---
@@ -191,8 +191,10 @@ P&R 完了後、`gowin_project/jjy_sim/impl/pnr/jjy_sim.rpt.txt` の **Pinout by
 
 1. Tang Nano 9K を USB Type-C で PC に接続する。
 2. GOWIN Programmer を起動し、`Edit → Cable Settings` で `Cable: Gowin USB Cable(FT2CH)` が認識されていることを確認する。
-3. **動作確認段階**：`SRAM Program` モードで `jjy_sim.fs` を書き込む（電源を切ると揮発する）。
-4. **常用化段階**：`Embedded Flash Mode` で書き込むと電源再投入後も動作する。
+3. **動作確認段階**：`SRAM Program` モードで `jjy_sim.fs` を書き込む（電源を切ると揮発する）。書き込み回数に上限がある内蔵フラッシュを消耗させないため、試行錯誤は必ずこちらで行う。
+4. **常用化段階**：`Embedded Flash Mode` / `embFlash Erase, Program` で書き込むと、電源投入だけで PC 無しに起動する。所要時間は約 9 秒。
+
+   `Verify` 付きを選ぶと書き込みが成功していても `Verify Failed at 0` が出る。これは失敗を意味しない。判別方法と根拠は [docs/knowledge.md §6.2](docs/knowledge.md) を参照。
 
 ### 3.9 動作確認（Step 3 相当）
 

@@ -320,6 +320,49 @@ led        | 10/3      | Y          | out   | IOL5[A] | LVCMOS18   | 8     | UP
 
 書き込み前に `Edit → Cable Settings` で `Cable: Gowin USB Cable(FT2CH)` が認識されていることを確認すること。macOSでは初回接続時に `/dev/cu.usbserial-XXXXXXXX` 系のデバイスが2つ（FT2CHはデュアルチャネル）出現する。
 
+### 6.0 Embedded Flash への書き込み手順
+
+1. デバイス一覧の行をダブルクリックして Device configuration ダイアログを開く
+2. **Access Mode** = `Embedded Flash Mode`
+3. **Operation** = `embFlash Erase, Program`
+4. Programming Options → File name に `gowin_project/jjy_sim/impl/pnr/jjy_sim.fs` を指定
+5. Save して Program/Configure を実行
+
+GW1NR-9 での所要時間は実測 **約 9 秒**（Erase + Program + Verify 込み）。
+
+**書き込み回数には上限がある。** 内蔵コンフィグレーションフラッシュは外付け SPI NOR（10 万回オーダー）と比べて桁違いに少ない。正確な値は GW1N シリーズ データシート（DS100）に記載があるが、本プロジェクトでは未入手。デバッグは必ず SRAM Program で行い、embFlash は構成が固まった区切りにだけ使うこと。
+
+書き込み後は **USB を抜き差しし、プログラマを一切操作せずに起動すること**を確認する。DONE LED が点灯すれば、FPGA がフラッシュからビットストリームを読み CRC 検査を通過した証拠になる。
+
+### 6.2 `Verify Failed at 0` は書き込み失敗を意味しない
+
+警告。`embFlash Erase,Program,Verify` を選ぶと、書き込みが正常に完了していても以下のように Verify だけが失敗する。
+
+```
+Info:    Operation "embFlash Erase,Program,Verify" for device#1...
+Info:    Status Code is: 0x00039020
+Error:    Verify Failed at 0
+Error:    Verify Failed
+Info:    Status Code is: 0x0003F020
+Info:    User Code: 0x00004E79
+Info:    Program Finished!
+Info:    Finished.
+```
+
+**実機で確認済み：この状態でも電源を入れ直せば正常に起動し、設計通りに動作する。** GW1N の内蔵コンフィグレーションフラッシュは設計データ保護のため読み出しが制限されており、Verify が読み戻しに失敗しているものと考えられる。
+
+判別のポイント：
+
+- **`Verify Failed at 0`** — 先頭アドレスで即失敗している。フラッシュの摩耗や書き込み不良ならアドレスはランダムか後方に偏るため、オフセット 0 での即失敗は「データ不一致」ではなく「読み戻し経路が期待と異なる」ことを示す
+- **`Program Finished!` が出ている** — 消去・書き込みフェーズは完走している
+- **`User Code` が読めている** — JTAG 通信自体は正常
+
+対処：
+
+1. **Verify エラーを消そうとして書き込みを繰り返さない。** 何の成果も無いまま書き込み回数を消費する
+2. **電源を抜き差しして DONE LED を見る。** これが唯一かつ決定的な判定である。点灯すれば書き込みは成功している
+3. 以後は `embFlash Erase, Program`（Verify なし）で足りる
+
 ### 6.1 書き込みが「Operation 'SRAM Program' for device#1...」で固まる場合
 
 報告。GOWIN Programmer のログが下記の状態でハングし、Progress バーが進まないことがある：
