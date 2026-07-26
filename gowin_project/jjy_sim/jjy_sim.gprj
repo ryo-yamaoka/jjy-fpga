@@ -12,6 +12,9 @@
         <File path="../../hdl/src/time_setter.sv" type="file.verilog" enable="1"/>
         <File path="../../hdl/src/date_calc.sv" type="file.verilog" enable="1"/>
         <File path="../../hdl/src/bin9_to_bcd.sv" type="file.verilog" enable="1"/>
+        <File path="../../hdl/src/i2c_master.sv" type="file.verilog" enable="1"/>
+        <File path="../../hdl/src/rx8900_ctrl.sv" type="file.verilog" enable="1"/>
+        <File path="../../hdl/src/time_arbiter.sv" type="file.verilog" enable="1"/>
         <File path="../../hdl/src/jjy_top.sv" type="file.verilog" enable="1"/>
         <File path="../../hdl/constraints/jjy_top.cst" type="file.cst" enable="1"/>
         <File path="../../hdl/constraints/clock.sdc" type="file.sdc" enable="1"/>

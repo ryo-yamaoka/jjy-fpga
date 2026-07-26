@@ -19,7 +19,7 @@
 
     <rect x="830" y="225" width="210" height="375" rx="6" fill="#fdf6ec" stroke="#b9770e" stroke-width="1.6"/>
     <text x="935" y="250" font-size="13" font-weight="bold" fill="#7a4a00" text-anchor="middle">AE-RX8900</text>
-    <text x="935" y="568" font-size="9" fill="#776655" text-anchor="middle">EPSON RX8900SA（DTCXO ±5ppm）</text>
+    <text x="935" y="568" font-size="9" fill="#776655" text-anchor="middle">EPSON RX8900CE（DTCXO ±5ppm）</text>
     <text x="935" y="584" font-size="9" fill="#776655" text-anchor="middle">I2Cスレーブアドレス 0x32</text>
   </g>
 
@@ -27,8 +27,6 @@
     <path d="M540 120 H805 V300 H830"/>
     <path d="M500 240 H560 V120"/>
     <path d="M805 270 H830"/>
-    <path d="M680 120 V190"/>
-    <path d="M740 120 V190"/>
   </g>
   <text x="532" y="124" font-size="11" font-weight="bold" fill="#c0392b" text-anchor="end">3.3V</text>
 
@@ -49,12 +47,10 @@
     <path d="M500 330 H830"/>
     <path d="M500 380 H830"/>
     <path d="M500 430 H830"/>
-    <path d="M680 190 V330"/>
-    <path d="M740 190 V324 A6 6 0 0 1 740 336 V380"/>
     <path d="M500 610 H560 V780"/>
-    <path d="M640 680 H668"/>
-    <path d="M708 680 H724"/>
-    <path d="M748 680 H790 V505 H830"/>
+    <path d="M640 680 H664"/>
+    <path d="M688 680 H706"/>
+    <path d="M746 680 H790 V505 H830"/>
     <path d="M640 680 V688"/>
     <path d="M640 697 V780"/>
     <path d="M830 540 H810 V780"/>
@@ -94,8 +90,15 @@
     <text x="40" y="534" font-size="9" fill="#333" text-anchor="middle">アンテナ</text>
     <text x="136" y="516" font-size="8.5" fill="#333">4.7nF</text>
     <text x="136" y="530" font-size="8" fill="#666">40kHz共振</text>
+    <text x="86" y="622" font-size="9" font-weight="bold" fill="#333" text-anchor="end">Q1</text>
     <text x="110" y="662" font-size="9" fill="#333">BTN5551A3-Q</text>
     <text x="110" y="676" font-size="8.5" fill="#666">NPN 増幅段</text>
+
+    <rect x="172" y="688" width="225" height="70" rx="4" fill="#fdf3f2" stroke="#c0392b" stroke-width="1.1" stroke-dasharray="5 3"/>
+    <text x="182" y="704" font-size="8.5" font-weight="bold" fill="#a93226">carrier_ant 出力極性（必須要件）</text>
+    <text x="182" y="719" font-size="8" fill="#7b4038">振幅 100% 区間：40kHz 矩形波を出力</text>
+    <text x="182" y="732" font-size="8" fill="#7b4038">振幅 10% 区間 ：L 固定（Q1 を遮断）</text>
+    <text x="182" y="749" font-size="7.5" fill="#a93226">H 固定は Q1 飽和 → 共振消失・DC 通電・素子破壊</text>
 
     <path d="M186 486 H204" stroke="#222" stroke-width="2" fill="none"/>
     <path d="M186 493 Q195 499 204 493" stroke="#222" stroke-width="2" fill="none"/>
@@ -108,18 +111,29 @@
     <text x="232" y="535" font-size="8.5" fill="#333" text-anchor="middle">0.1μF</text>
   </g>
 
+  <g id="jumper-note">
+    <rect x="600" y="145" width="190" height="140" rx="5" fill="#fffdf5" stroke="#b9770e" stroke-width="1.2" stroke-dasharray="5 3"/>
+    <text x="695" y="165" font-size="10" font-weight="bold" fill="#7a4a00" text-anchor="middle">AE-RX8900 はんだジャンパ</text>
+
+    <text x="612" y="187" font-size="9" font-weight="bold" fill="#7a4a00">J1 ショート ※1</text>
+    <text x="618" y="200" font-size="8" fill="#776655">基板実装 R4/R5 = 10kΩ で</text>
+    <text x="618" y="212" font-size="8" fill="#776655">SDA・SCL を VDD へプルアップ</text>
+
+    <text x="612" y="233" font-size="9" font-weight="bold" fill="#7a4a00">J3 ショート</text>
+    <text x="618" y="246" font-size="8" fill="#776655">FOUT を基板上 LED1 へ接続。</text>
+    <text x="618" y="258" font-size="8" fill="#776655">1Hz 点滅で FSEL 設定を目視確認</text>
+
+    <text x="612" y="277" font-size="8.5" fill="#999">J2 オープン（/INT 未使用）</text>
+  </g>
+
   <g id="parts">
-    <rect x="672" y="170" width="16" height="40" fill="#fff" stroke="#222" stroke-width="1.6"/>
-    <rect x="732" y="170" width="16" height="40" fill="#fff" stroke="#222" stroke-width="1.6"/>
-    <text x="710" y="163" font-size="9.5" fill="#333" text-anchor="middle">10kΩ×2 ※1</text>
+    <polygon points="664,669 664,691 688,680" fill="#222"/>
+    <path d="M688 668 V692" stroke="#222" stroke-width="2.6" fill="none"/>
+    <path d="M688 668 H683 V672 M688 692 H693 V688" stroke="#222" stroke-width="1.6" fill="none"/>
+    <text x="676" y="657" font-size="9" fill="#333" text-anchor="middle">1N5817</text>
 
-    <rect x="668" y="672" width="40" height="16" fill="#fff" stroke="#222" stroke-width="1.6"/>
-    <text x="688" y="665" font-size="9" fill="#333" text-anchor="middle">100Ω</text>
-
-    <polygon points="724,669 724,691 748,680" fill="#222"/>
-    <path d="M748 668 V692" stroke="#222" stroke-width="2.6" fill="none"/>
-    <path d="M748 668 H743 V672 M748 692 H753 V688" stroke="#222" stroke-width="1.6" fill="none"/>
-    <text x="736" y="657" font-size="9" fill="#333" text-anchor="middle">1N5817</text>
+    <rect x="706" y="672" width="40" height="16" fill="#fff" stroke="#222" stroke-width="1.6"/>
+    <text x="726" y="657" font-size="9" fill="#333" text-anchor="middle">100Ω</text>
 
     <path d="M624 688 H656" stroke="#222" stroke-width="2" fill="none"/>
     <path d="M632 697 H648" stroke="#222" stroke-width="4" fill="none"/>
@@ -168,8 +182,6 @@
   <g id="junctions">
     <g fill="#c0392b">
       <circle cx="560" cy="120" r="3.3"/>
-      <circle cx="680" cy="120" r="3.3"/>
-      <circle cx="740" cy="120" r="3.3"/>
       <circle cx="805" cy="270" r="3.3"/>
     </g>
     <g fill="#e67e22">
@@ -177,8 +189,6 @@
       <circle cx="232" cy="460" r="3.3"/>
     </g>
     <g fill="#222">
-      <circle cx="680" cy="330" r="3.3"/>
-      <circle cx="740" cy="380" r="3.3"/>
       <circle cx="100" cy="495" r="3.3"/>
       <circle cx="100" cy="570" r="3.3"/>
     </g>
@@ -213,8 +223,8 @@
     <path d="M620 874 H648" stroke="#999" stroke-width="1.4" stroke-dasharray="5 4" fill="none"/>
     <text x="652" y="878" font-size="9" fill="#444">予約（GPS拡張）</text>
     <text x="830" y="822" font-size="10" font-weight="bold" fill="#333">注記</text>
-    <text x="830" y="842" font-size="8.5" fill="#444">※1 プルアップは外付け10kΩまたはJ1ショートの一方のみ</text>
-    <text x="830" y="860" font-size="8.5" fill="#444">※2 CR2032は一次電池。1N5817で逆流（充電）を防止</text>
+    <text x="830" y="842" font-size="8.5" fill="#444">※1 I2Cプルアップは基板上J1ショートで供給。外付け抵抗は併用しない</text>
+    <text x="830" y="860" font-size="8.5" fill="#444">※2 CR2032は一次電池。1N5817で逆流（充電）を防止。直列順は任意</text>
     <text x="830" y="878" font-size="8.5" fill="#444">※3 増幅段は微弱無線局の範囲（3m地点500μV/m以下）を厳守</text>
   </g>
 </svg>

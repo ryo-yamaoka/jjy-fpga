@@ -7,8 +7,26 @@ IO_PORT "uart_rx" PULL_MODE=UP IO_TYPE=LVCMOS33;
 IO_LOC "carrier_led" 10;
 IO_PORT "carrier_led" PULL_MODE=UP DRIVE=8 IO_TYPE=LVCMOS18;
 
+// Drives the NPN base through 1k. Pull-down keeps the transistor off while
+// the FPGA is unconfigured; a pull-up would bias it on via the base resistor.
 IO_LOC "carrier_ant" 25;
-IO_PORT "carrier_ant" PULL_MODE=UP DRIVE=24 IO_TYPE=LVCMOS33;
+IO_PORT "carrier_ant" PULL_MODE=DOWN DRIVE=24 IO_TYPE=LVCMOS33;
+
+// RX8900 RTC (Step 5). Open-drain I2C: the pull-ups live on the AE-RX8900
+// board (J1 shorted, R4/R5 = 10k), so no internal pull here.
+IO_LOC "sda" 26;
+IO_PORT "sda" PULL_MODE=NONE DRIVE=8 IO_TYPE=LVCMOS33;
+
+IO_LOC "scl" 27;
+IO_PORT "scl" PULL_MODE=NONE DRIVE=8 IO_TYPE=LVCMOS33;
+
+// FOUT 1Hz from RX8900 (FOE=H fixed). Pull-down keeps the input quiet
+// (no edges -> free-run fallback) when the module is disconnected.
+IO_LOC "fout_1hz" 28;
+IO_PORT "fout_1hz" PULL_MODE=DOWN IO_TYPE=LVCMOS33;
+
+// Reserved for the future GPS add-on (do not reuse):
+//   pin 29 = GPS UART RX (NMEA), pin 30 = GPS 1PPS
 
 IO_LOC "led_marker"     11;
 IO_LOC "led_one"        13;
@@ -18,3 +36,6 @@ IO_PORT "led_marker"     PULL_MODE=UP DRIVE=8 IO_TYPE=LVCMOS18;
 IO_PORT "led_one"        PULL_MODE=UP DRIVE=8 IO_TYPE=LVCMOS18;
 IO_PORT "led_zero"       PULL_MODE=UP DRIVE=8 IO_TYPE=LVCMOS18;
 IO_PORT "led_frame_sync" PULL_MODE=UP DRIVE=8 IO_TYPE=LVCMOS18;
+
+IO_LOC "led_rtc" 16;
+IO_PORT "led_rtc" PULL_MODE=UP DRIVE=8 IO_TYPE=LVCMOS18;

@@ -4,7 +4,8 @@ module jjy_modulator #(
     input  logic       clk,
     input  logic [9:0] sec_pos,    // 0..999 (ms position within current second)
     input  logic [1:0] pulse_type, // 0=Marker, 1=One, 2=Zero
-    output logic       carrier
+    output logic       carrier,    // active-high, idles low: antenna driver
+    output logic       carrier_n   // active-low: on-board LED
 );
     logic carrier_40k;
     carrier_40khz #(.CLK_HZ(CLK_HZ)) carrier_inst (
@@ -27,9 +28,14 @@ module jjy_modulator #(
         endcase
     end
 
-    // OOK: pass through 40kHz carrier (LED half-bright, RF on) during the
-    // leading on_ms window, then drive carrier high (LED off, RF off).
+    // OOK: gate the 40kHz carrier with the leading on_ms window. carrier must
+    // idle LOW because it drives the base of the NPN tank driver through 1k;
+    // idling high would keep that transistor saturated for the whole RF-off
+    // window, clamping the resonant tank and pulling DC through the loop.
+    // carrier_n is the inverse for the active-low on-board LED, which shows
+    // the same half-brightness / dark pattern either way.
     logic carrier_on;
     assign carrier_on = (sec_pos < on_ms);
-    assign carrier    = carrier_on ? carrier_40k : 1'b1;
+    assign carrier    = carrier_on & carrier_40k;
+    assign carrier_n  = ~carrier;
 endmodule
