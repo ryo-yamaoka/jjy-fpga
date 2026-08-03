@@ -381,6 +381,9 @@ jjy-fpga/
 ├── docs/
 │   ├── jjy-fpga-design-doc.md      # 設計ドキュメント（思想・意思決定）
 │   ├── knowledge.md                # 実装知見集（実装中の発見と教訓）
+│   ├── schematic.svg               # 回路図（現行実機構成）
+│   ├── board-layout.md             # ユニバーサル基板 実装ガイド（穴座標・手順）
+│   ├── board-layout.svg            # ユニバーサル基板 レイアウト図
 │   └── manual/                     # GOWIN 公式マニュアル類の配置先（gitignore 対象、各自配置）
 ├── hdl/
 │   ├── src/                        # SystemVerilog ソース（正本）
@@ -403,6 +406,7 @@ jjy-fpga/
 - [設計ドキュメント](docs/jjy-fpga-design-doc.md) — プロジェクトの動機、ボード/HDL 選定理由、Step 1〜7 の詳細計画、電波法に関する詳細な検討。
 - [実装知見集](docs/knowledge.md) — Tang Nano 9K のハードウェア仕様、GOWIN EDA の落とし穴、JJY タイムコード実装の教訓。
 - [回路図](docs/schematic.svg) — 現行実機構成（RX8900 RTC + 共振タンク・NPN 増幅段）の結線図。
+- [ユニバーサル基板 実装ガイド](docs/board-layout.md) / [レイアウト図](docs/board-layout.svg) — ブレッドボードからの移設用。部品配置・穴座標・配線手順・通電前チェック。
 
 ---
 
