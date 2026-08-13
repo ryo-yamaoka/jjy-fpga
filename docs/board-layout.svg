@@ -1139,7 +1139,7 @@
 <text x="934.0" y="185.0" font-size="7.5" fill="#667" font-family="Menlo,Consolas,monospace">C1-R23 → +5V ／ C3-R23 → Q1 コレクタ</text>
 <text x="872.0" y="200.0" font-size="9" font-weight="bold" fill="#117864">Cres</text>
 <text x="934.0" y="200.0" font-size="8.5" fill="#444">4.7nF 共振コンデンサ</text>
-<text x="934.0" y="212.0" font-size="7.5" fill="#667" font-family="Menlo,Consolas,monospace">C5-R21 → +5V ／ C5-R23 → コレクタ</text>
+<text x="934.0" y="212.0" font-size="7.5" fill="#667" font-family="Menlo,Consolas,monospace">C5-R21 → TB1-1 直結 ／ C5-R23 → コレクタ</text>
 <text x="872.0" y="227.0" font-size="9" font-weight="bold" fill="#117864">Q1</text>
 <text x="934.0" y="227.0" font-size="8.5" fill="#444">BTN5551A3-Q（TO-92）</text>
 <text x="934.0" y="239.0" font-size="7.5" fill="#667" font-family="Menlo,Consolas,monospace">R22：C6=C ／ C7=B ／ C8=E</text>
@@ -1181,6 +1181,9 @@
 <text x="934.0" y="566.0" font-size="8.5" fill="#444">端子台 5P 5.08mm（GPS・Step 7）</text>
 <text x="934.0" y="578.0" font-size="7.5" fill="#667" font-family="Menlo,Consolas,monospace">R22：C27=VCC C29=GND C31=TXD</text>
 <text x="934.0" y="593.0" font-size="7.5" fill="#667" font-family="Menlo,Consolas,monospace">　　　C33=PPS C35=RXD（未接続）</text>
+<text x="872.0" y="608.0" font-size="9" font-weight="bold" fill="#2c5f8a">TP1〜3</text>
+<text x="934.0" y="608.0" font-size="8.5" fill="#444">テストポイント（幹線上・追加配線不要）</text>
+<text x="934.0" y="620.0" font-size="7.5" fill="#667" font-family="Menlo,Consolas,monospace">TP1(+5V)=C3-R20 ／ TP2(+3.3V)=C21-R14 ／ TP3(GND)=C2-R24</text>
 <text x="78.0" y="834.0" font-size="13" font-weight="bold" fill="#222">② 配線図（部品面から透視した図・実配線ははんだ面）</text>
 <text x="78.0" y="850.0" font-size="9.5" fill="#666">配線はすべてポリウレタン銅線（UEW）。太線＝電流の大きい配線（0.4mm 以上）、細線＝信号（0.26mm）。図は透視図なので左右反転していない。</text>
 <g id="grid">
@@ -2287,7 +2290,7 @@
 <path d="M496.0 902.0 L496.0 1298.0"/>
 <path d="M78.0 1298.0 L496.0 1298.0"/>
 <path d="M78.0 1298.0 L78.0 1364.0"/>
-<path d="M166.0 1298.0 L166.0 1320.0"/>
+<path d="M78.0 1364.0 L166.0 1320.0"/>
 <path d="M298.0 1298.0 L298.0 1320.0"/>
 <path d="M254.0 1298.0 L254.0 1320.0"/>
 </g>
@@ -2317,6 +2320,16 @@
 <path d="M584.0 1232.0 L584.0 1254.0"/>
 <path d="M540.0 1342.0 L584.0 1320.0"/>
 </g>
+<g>
+<rect x="116.5" y="1292.5" width="11" height="11" fill="#ffffff" stroke="#e67e22" stroke-width="1.8"/>
+<rect x="512.5" y="1160.5" width="11" height="11" fill="#ffffff" stroke="#c0392b" stroke-width="1.8"/>
+<rect x="94.5" y="1380.5" width="11" height="11" fill="#ffffff" stroke="#2166ac" stroke-width="1.8"/>
+<text x="122.0" y="1284.0" font-size="8" font-weight="bold" fill="#e67e22" text-anchor="middle" font-family="Menlo,Consolas,monospace">TP1</text>
+<text x="518.0" y="1190.0" font-size="8" font-weight="bold" fill="#c0392b" text-anchor="middle" font-family="Menlo,Consolas,monospace">TP2</text>
+<text x="100.0" y="1406.0" font-size="8" font-weight="bold" fill="#2166ac" text-anchor="middle" font-family="Menlo,Consolas,monospace">TP3</text>
+</g>
+<rect x="87.0" y="1330.0" width="60.0" height="11" rx="2" fill="#ffffff" fill-opacity="0.88"/>
+<text x="90.0" y="1338.0" font-size="8" font-weight="bold" fill="#e67e22" font-family="Menlo,Consolas,monospace" text-anchor="start">タンク直結</text>
 <text x="287.0" y="1289.2" font-size="9" font-weight="bold" fill="#e67e22" text-anchor="middle">+5V 幹線（R20 経由）</text>
 <text x="575.2" y="1151.7" font-size="9" font-weight="bold" fill="#c0392b" text-anchor="middle">+3.3V 幹線（R14 経由）</text>
 <text x="738.0" y="1377.2" font-size="9" font-weight="bold" fill="#2166ac" text-anchor="middle">GND 幹線（R24 経由）</text>
@@ -2353,9 +2366,9 @@
 <text x="880.0" y="959.0" font-size="7.5" fill="#555">全配線をポリウレタン銅線（UEW）で行う。被覆があるため、交差もラン</text>
 <text x="880.0" y="969.0" font-size="7.5" fill="#555">ド上の通過も短絡しない。経路は最短で自由に引いてよい。</text>
 <text x="872.0" y="984.0" font-size="8.5" font-weight="bold" fill="#a93226">4. 線径</text>
-<text x="880.0" y="995.0" font-size="7.5" fill="#555">+5V 系と増幅段の GND は 0.4mm 以上、信号は 0.26mm</text>
-<text x="880.0" y="1005.0" font-size="7.5" fill="#555"> でよい。色付き UEW を使い、電源・GND</text>
-<text x="880.0" y="1015.0" font-size="7.5" fill="#555">・信号を色で分けると後から経路を追える。</text>
+<text x="880.0" y="995.0" font-size="7.5" fill="#555">+5V 系・増幅段の GND・タンク経路（TB1〜Cres〜Q1）は 0.4mm</text>
+<text x="880.0" y="1005.0" font-size="7.5" fill="#555"> 以上、信号は 0.26mm でよい。色付き UEW を使い、</text>
+<text x="880.0" y="1015.0" font-size="7.5" fill="#555">電源・GND・信号を色で分けると後から経路を追える。</text>
 <text x="872.0" y="1030.0" font-size="8.5" font-weight="bold" fill="#a93226">5. はんだ付け</text>
 <text x="880.0" y="1041.0" font-size="7.5" fill="#555">UEW は端を予備はんだして被覆を確実に飛ばしてから挿す。はんだ部の</text>
 <text x="880.0" y="1051.0" font-size="7.5" fill="#555">熱で被覆が後退するため、線はランドから 1mm 以上離して這わせる。</text>
@@ -2379,7 +2392,13 @@
 <text x="880.0" y="1267.0" font-size="7.5" fill="#555">TB2 / Rfr / Rfp / Cfr / Cfp は GPS</text>
 <text x="880.0" y="1277.0" font-size="7.5" fill="#555"> 用。今回は実装せず領域だけ確保する。</text>
 <text x="872.0" y="1292.0" font-size="8.5" font-weight="bold" fill="#a93226">12. 実装順</text>
-<text x="880.0" y="1303.0" font-size="7.5" fill="#555">ソケット → 幹線（GND→+5V→+3.3V）→ 低背部品 → Q1 →</text>
-<text x="880.0" y="1313.0" font-size="7.5" fill="#555"> 端子台・電池ホルダ。端子台と BT1 の下を通る線は先に済ませる。</text>
-<path d="M60 1476 H1080" stroke="#ddd" stroke-width="1" fill="none"/><text x="60" y="1500" font-size="10" font-weight="bold" fill="#333">配線の色</text><path d="M62 1513 H92" stroke="#e67e22" stroke-width="2.4" fill="none"/><text x="98" y="1516" font-size="8.5" fill="#444">+5V（USB 5V／増幅段）</text><path d="M62 1529 H92" stroke="#c0392b" stroke-width="2.4" fill="none"/><text x="98" y="1532" font-size="8.5" fill="#444">+3.3V（RTC・GPS）</text><path d="M62 1545 H92" stroke="#2166ac" stroke-width="2.4" fill="none"/><text x="98" y="1548" font-size="8.5" fill="#444">GND 幹線</text><path d="M62 1561 H92" stroke="#222222" stroke-width="2.4" fill="none"/><text x="98" y="1564" font-size="8.5" fill="#444">信号（現行）</text><path d="M62 1577 H92" stroke="#8a8a8a" stroke-width="2.4" fill="none" stroke-dasharray="5 3"/><text x="98" y="1580" font-size="8.5" fill="#444">Step 7 GPS（未実装・パターンのみ）</text><text x="330" y="1500" font-size="10" font-weight="bold" fill="#333">配線材</text><text x="332" y="1516" font-size="8.5" fill="#444">・すべてポリウレタン銅線（UEW）。被覆があるため交差・ランド上の通過とも短絡しない。</text><text x="332" y="1531" font-size="8.5" fill="#444">・太線（+5V／GND）は 0.4mm 以上、細線（信号・+3.3V）は 0.26mm でよい。</text><text x="332" y="1546" font-size="8.5" fill="#444">・色付き UEW を電源・GND・信号で使い分けると、後から経路を追える。</text><text x="332" y="1561" font-size="8.5" fill="#444">・線の端は予備はんだで被覆を飛ばし、ランドから 1mm 以上離して這わせる。</text><text x="332" y="1580" font-size="8.5" fill="#444">●＝部品リードを挿す穴。○＝未使用の穴。図中の R20 / R14 / R24 は幹線の推奨経路。</text>
+<text x="880.0" y="1303.0" font-size="7.5" fill="#555">ソケット → 幹線（GND→+5V→+3.3V、TP1〜TP3 も同時）→</text>
+<text x="880.0" y="1313.0" font-size="7.5" fill="#555"> 低背部品 → Q1 → 端子台・電池ホルダ。その下を通る線は先に。</text>
+<text x="872.0" y="1328.0" font-size="8.5" font-weight="bold" fill="#a93226">13. 取付穴</text>
+<text x="880.0" y="1339.0" font-size="7.5" fill="#555">四隅の取付穴（φ3.2・間隔 89×66mm）と TB1・TB2 の干渉を実物で</text>
+<text x="880.0" y="1349.0" font-size="7.5" fill="#555">確認する。穴数が 36×24 未満なら TB2 が載らない。内側へ寄せる。</text>
+<text x="872.0" y="1364.0" font-size="8.5" font-weight="bold" fill="#a93226">14. テストポイント</text>
+<text x="880.0" y="1375.0" font-size="7.5" fill="#555">電源系の測定は TP1〜TP3 で行う。ソケットの空きピンにプローブを</text>
+<text x="880.0" y="1385.0" font-size="7.5" fill="#555">直接当てると隣接ピン短絡の危険がある。</text>
+<path d="M60 1476 H1080" stroke="#ddd" stroke-width="1" fill="none"/><text x="60" y="1500" font-size="10" font-weight="bold" fill="#333">配線の色</text><path d="M62 1513 H92" stroke="#e67e22" stroke-width="2.4" fill="none"/><text x="98" y="1516" font-size="8.5" fill="#444">+5V（USB 5V／増幅段）</text><path d="M62 1529 H92" stroke="#c0392b" stroke-width="2.4" fill="none"/><text x="98" y="1532" font-size="8.5" fill="#444">+3.3V（RTC・GPS）</text><path d="M62 1545 H92" stroke="#2166ac" stroke-width="2.4" fill="none"/><text x="98" y="1548" font-size="8.5" fill="#444">GND 幹線</text><path d="M62 1561 H92" stroke="#222222" stroke-width="2.4" fill="none"/><text x="98" y="1564" font-size="8.5" fill="#444">信号（現行）</text><path d="M62 1577 H92" stroke="#8a8a8a" stroke-width="2.4" fill="none" stroke-dasharray="5 3"/><text x="98" y="1580" font-size="8.5" fill="#444">Step 7 GPS（未実装・パターンのみ）</text><text x="330" y="1500" font-size="10" font-weight="bold" fill="#333">配線材</text><text x="332" y="1516" font-size="8.5" fill="#444">・すべてポリウレタン銅線（UEW）。被覆があるため交差・ランド上の通過とも短絡しない。</text><text x="332" y="1531" font-size="8.5" fill="#444">・太線（+5V／GND／タンク経路 TB1〜Cres〜Q1）は 0.4mm 以上、細線（信号・+3.3V）は 0.26mm でよい。</text><text x="332" y="1546" font-size="8.5" fill="#444">・色付き UEW を電源・GND・信号で使い分けると、後から経路を追える。</text><text x="332" y="1561" font-size="8.5" fill="#444">・線の端は予備はんだで被覆を飛ばし、ランドから 1mm 以上離して這わせる。</text><text x="332" y="1580" font-size="8.5" fill="#444">●＝部品リードを挿す穴。○＝未使用の穴。図中の R20 / R14 / R24 は幹線の推奨経路。</text>
 </svg>
